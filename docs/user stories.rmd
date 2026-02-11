@@ -1,1 +1,13 @@
 
+1. Individual person who wants to submit a license plate for review (grandma)
+
+She wants to submit one license plate and know yes or no if it would be approved. She interacts by submitting a single string into our interface. She needs it to be understandable, simple, and fast. She also needs to know $why$ is is not approved. Skills: very low she doesn't even know the requirements. 
+
+2. Individual person who wants to submit a license plate in bad faith (evil man)
+
+He also just wants so submit a single license plate. he wants to know if he can get away with a terrible plate. He wants to know exactly what the line. He needs it to be fast and specific. He is skilled at being evil, but possibly not with computer coding. 
+
+3. The DMV worker trying to approve or disprove a list (technician)
+
+They want to submit a csv of proposed plates and wants it to return a list of all of them with acceptance and rejections (and why they were rejected). They should be able to create a csv. They need it to be accurate. They also need it to be quick. They might need to be able to edit the requirements. Their skills are that they are adapt at knowing which should be rejected, so they will not blindly trust the data. 
+
