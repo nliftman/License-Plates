@@ -51,11 +51,25 @@ https://github.com/4troDev/profanity.csv/blob/main/English.csv (profanity list)
 This is another txt file containing a single column of profanity. 
 
 # Use Cases
+We will look through three use cases for three different objectives:
+
+Objective 1: system validates a plate as allowed (valid plate)
+
+User: types in a license plate
+System: displays "accepted" becasue the plate is valid
+
+Objective 2: system validates a not allowed plate (invalid plate)
+
+User: types in a license plate
+System: displays "acceptance" or "rejection"
+User: clicks "more information" key
+System: displays rationale for rejection 
 
 
-Functional Specification. The document should have the following sections:
-Background. The problem being addressed.
-User profile. Who uses the system. What they know about the domain and computing (e.g., can browse the web, can program in Python)
-Data sources. What data you will use and how it is structured.
-Use cases. Describing at least two use cases. For each, describe: (a) the objective of the user interaction (e.g., withdraw money from an ATM); and (b) the expected interactions between the user and your system. Additional use cases are recommended, if applicable!
+Objective 3: DMV worker wants to know if a list of plates is allowed
+
+User: submits a CSV or dataframe with license plates
+System: validates format, then creates duplicate of csv with two additional columns:
+"acceptance", "rationale". The acceptance column contains "accepted" or "denied" and the rationale column contains ether nothing for accepted, "invalid" if the plate is simply invalid, and the reason if the plate contains illicit material. 
+System: returns CSV
 
