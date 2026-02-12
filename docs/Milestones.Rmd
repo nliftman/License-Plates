@@ -3,3 +3,40 @@ title: "Milestones"
 output: html_document
 ---
 
+This is a list of milestones in order of $about$ when they need to be completed:
+
+1.Create user cases, tests cases, and interface concept
+
+**Success**: documentation for all of these
+
+2.Collect all swears and slurs + input in python
+
+**Success**: csv is callable in python, with no duplicates
+
+3.Collect all tweets + input in python
+
+**Success**: we are able to iterate through the tweets to check them for different words from our csv of swears
+
+4.Check how many times each word appears in our list of tweets
+
+**Success**: we have a score for each word and the number of times it appears in our dataset of tweets
+
+5.Determine which swears are slurs and which are swears
+
+**Success**: create new score for each word based on if it falls in the “hate-speech” tweet or the “offensive-language” tweet
+
+6.Create algorithm for how we combine the number of times appears and the hate vs offensive words
+
+**Success**: have a score returned that we feel reflects the likelihood of being rejected (or does reflect based on the previous license plate csv)
+
+7.Write code for user interface to input a single word
+
+**Success**: you can input a word, it runs our algorithm, and returns the score
+
+8.Write code for user interface to input a csv
+
+**Success**: you can input a csv, it runs our algorithm, and returns a csv with the score
+
+9.Create test mechanisms
+
+**Success**: our code passes our tests
