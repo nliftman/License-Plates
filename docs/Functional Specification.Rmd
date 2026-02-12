@@ -2,4 +2,74 @@
 title: "Functional Specification"
 output: pdf_document
 ---
+# Background
+
+The state of California manually reviews license plate submissions. We will create a tool California could use to identify if plates should be rejected or accepted. This tool can also be used by individual people to see if their vanity plate is likely to be rejected or accepted. We will accomplish this using Twitter data where there is a large database of inappropriate speech.
+
+# User Profile
+
+This system has three distinct users: 
+1. An individual person who wants to submit a license plate for review, but is doing so in good faith
+
+Your grand-mother wants to submit one license plate and know yes or no if it would be approved. She interacts by submitting a single string into our interface. She needs it to be understandable, simple, and fast. She has very low skill level. She does not know how to look up the requirements for license plates and will be using this system to work shop the plates she wants. 
+
+2. Individual person who wants to submit a license plate, but doing so in bad faith
+
+There is an evil person who also wants so submit a single license plate. He wants to know if he can get away with a terrible plate. He wants to know exactly what the line. He needs it to be fast and specific. He is skilled at being evil, but maybe not super skilled with computer knowledge. So the system needs to be easily understandable.
+
+3. The DMV worker trying to approve or disprove a list (technician)
+
+They want to submit a csv of proposed plates and wants it to return a list which highlights the plates which should be rejected. The skills of our technician are limited technically (they can create a csv, but do not understand complex data systems), but they are very skilled in knowing if a plate should be rejected or not. 
+
+# Data Sources
+
+https://github.com/veltman/ca-license-plates/tree/master (California License Plates) 
+
+`plate`: the personalized license plate combination requested.
+`review_reason_code`: Reason code for the application being reviewed (see below for codes).
+`customer_meaning`: Meaning of the plate provided by the applicant.
+`reviewer_comments`: Comments from DMV reviewers.
+`status`: Y means the plate was approved, N means it was denied.
+
+https://www.kaggle.com/datasets/muhammadatef/english-profanity-words-dataset (English Profanity)
+`count` = number of CrowdFlower users who coded each tweet (min is 3, sometimes more users coded a tweet when judgments were determined to be unreliable by CF).
+`hate_speech` = number of CF users who judged the tweet to be hate speech.
+`offensive_language` = number of CF users who judged the tweet to be offensive.
+`neither` = number of CF users who judged the tweet to be neither offensive nor non-offensive.
+`class` = class label for majority of CF users. 0 - hate speech 1 - offensive language 2 - neither
+
+https://en.wikipedia.org/wiki/List_of_symbols_designated_by_the_ADL_as_hate_symbols (hate symbols)
+This is a list of all hate symbols and words that are designated as hateful by the ADL. This is not formatted as a CSV, we will have to go through and turn this to a csv.
+
+https://github.com/LDNOOBW/List-of-Dirty-Naughty-Obscene-and-Otherwise-Bad-Words/blob/master/en (list of naughty words)
+This is a txt file which contains a single list of naughty words. 
+
+https://www.cs.cmu.edu/~biglou/resources/bad-words.txt (list of bad words)
+This is another txt file containing a single column of bad words. 
+
+https://github.com/4troDev/profanity.csv/blob/main/English.csv (profanity list)
+This is another txt file containing a single column of profanity. 
+
+# Use Cases
+We will look through three use cases for three different objectives:
+
+Objective 1: system validates a plate as allowed (valid plate)
+
+User: types in a license plate
+System: displays "accepted" becasue the plate is valid
+
+Objective 2: system validates a not allowed plate (invalid plate)
+
+User: types in a license plate
+System: displays "acceptance" or "rejection"
+User: clicks "more information" key
+System: displays rationale for rejection 
+
+
+Objective 3: DMV worker wants to know if a list of plates is allowed
+
+User: submits a CSV or dataframe with license plates
+System: validates format, then creates duplicate of csv with two additional columns:
+"acceptance", "rationale". The acceptance column contains "accepted" or "denied" and the rationale column contains ether nothing for accepted, "invalid" if the plate is simply invalid, and the reason if the plate contains illicit material. 
+System: returns CSV
 
