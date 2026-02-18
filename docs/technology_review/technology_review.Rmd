@@ -1,0 +1,6 @@
+---
+title: "technology_review"
+output: html_document
+---
+
+hopefully this initializes it in github.
