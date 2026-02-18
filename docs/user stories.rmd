@@ -32,4 +32,4 @@ System: validates format, then creates duplicate of csv with two additional colu
 "acceptance", "rationale". The acceptance column contains "accepted" or "denied" and the rationale column contains ether nothing for accepted, "invalid" if the plate is simply invalid, and the reason if the plate contains illicit material. 
 System: returns CSV
 
-
+# Component Design 
