@@ -1,6 +1,6 @@
 ---
 title: "Component Specification"
-output: html_document
+output: github_document
 editor_options: 
   markdown: 
     wrap: 72

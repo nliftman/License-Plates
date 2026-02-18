@@ -1,6 +1,6 @@
 ---
 title: "Milestones"
-output: html_document
+output: github_document
 ---
 
 This is a list of milestones in order of $about$ when they need to be completed:
