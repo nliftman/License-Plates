@@ -1,6 +1,72 @@
 ---
-title: "technology_review"
-output: html_document
+title: "Technology Review"
+output: github_document
+editor_options: 
+  markdown: 
+    wrap: 72
 ---
 
-hopefully this initializes it in github.
+**Python Package Choices**
+
+1.  Package for leetspeak decoding
+
+-   **Name:** floft/leetspeak (<https://github.com/floft/leetspeak>)
+-   **Author:** floft
+-   **Purpose:** a leetspeak to english translator that uses the
+    probability of word usage taken from the Project Gutenberg from all
+    the possibilities it can generate Package for leetspeak decoding
+
+2.  Another package for leetspeak decoding
+
+-   **Name:**floft/leetspeak(<https://github.com/Monotoba/leetspeak-encoder-decoder>)
+-   **Author:**Monotoba
+-   **Purpose:** a leetspeak to multiple languages translator that
+    allows for encoding and decoding leetspeak. The package also has a
+    dictionary for multiple character replacements in different
+    languages and can identify the correct character and language based
+    on language identifiers
+
+3.  Package for fuzzy matching (calculates difference or similarity
+    between two strings)
+
+-   **Name:** RapidFuzz
+    (<https://pypi.org/project/RapidFuzz/#description>)
+-   **Author:** Max Bachmann
+-   **Purpose:** Calculates similarity or “distance” between two or more
+    strings and assigns a score/ratio based on this distance. Builds off
+    of string similarities calculations from FuzzyWuzzy library
+
+4.  Package for fuzzy matching (calculates difference or similarity
+    between two strings)
+
+-   **Name:** TheFuzz (<https://pypi.org/project/thefuzz/>)
+-   **Author:** Adam Cohen
+-   **Purpose:** Uses Levenshtein distance to calculate similarity or
+    “distance” between strings and assigns a score/ratio based on this
+    distance. Package for pyleetspeak (prob not since for encoding not
+    decoding)
+
+5.  Leetspeak encoder(this may not be useful for our project)
+
+-   **Name:** pyleetspeak (<https://github.com/Huertas97/pyleetspeak>)
+-   **Author:** Álvaro Huertas García
+-   **Purpose:**
+
+**Package Comparison**
+
+-   pros/cons of each package
+-   Addresses all requirements of project
+-   Compatibility with other elements in project
+-   Ease of use
+-   Computational efficiency for scale of data
+-   No software bugs that will impair use case
+-   Availability of relevant examples
+-   Look at open issues in github
+
+
+**Demo**
+
+Insert code demo here
+
+
+**Our package choice**
