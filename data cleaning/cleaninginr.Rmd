@@ -1,0 +1,72 @@
+---
+title: "cleaninginr"
+output: html_document
+---
+
+```{r}
+#loading all the packages
+
+library(tidyverse)
+library(rio)
+library(devtools)
+devtools::install_version("stringr", version = "1.4.1")
+library(stringr)
+
+#importing the cleaned words 
+clean <- import("cleaned_evilwords.csv")
+#only the ones with the spaces and then create the counted column
+#and score pre n count 
+clean <- clean %>% 
+  select(spaces) %>% 
+  mutate(counted = NA, score_pren = NA)
+
+#import the tweets
+label <- import("labeled_data.csv")
+
+
+#start by dropping all that are class 2
+#0 hate 1 offensive
+label_off <- label %>% 
+  filter(class < 2)
+
+#hatespeech goes from 0 to 7 score 
+#we normalize it to go from .125 for nothing to 1 for includes
+label_off <- label_off %>% 
+  mutate(scorehate = (hate_speech+1)/8)
+
+#offensive langauge goes from 0 to 9
+label_off <- label_off %>% 
+  mutate(scoreoff = (offensive_language+1)/10)
+#this weighs hate speach higher automatically! yay! 
+
+#now getting count of all of our bad words <3 
+for(i in 1:nrow(clean)) {
+  #this detects and says true if it appears in the tweet!
+  label_off$has_data <- str_detect(label_off$tweet, clean[i, 1])
+  #now getting all of the rows that have true and make score
+  label_off_true <- label_off %>% 
+    filter(has_data == TRUE)
+  clean[i, 3] <- (sum(label_off_true$scorehate)/nrow(label_off_true) + sum(label_off_true$scoreoff)/nrow(label_off_true))
+  #now just getting the count of how many times it appears
+  re <- label_off %>% 
+    group_by(has_data) %>% 
+    count()
+  #putting it in clean! 
+  clean[i, 2] <- re[2,2]
+}
+
+#the top possible highest score is 2
+# highest 1.1250000 score pre n
+# lowest 0.4250000 score pre n
+
+#final score!!!! lets gooooo
+clean_final <- clean %>% 
+  mutate(normal = counted/11151)
+clean_final <- clean_final %>% 
+  mutate(final_score = score_pren + normal) %>% 
+  select(spaces, final_score)
+
+#export as a csv
+write.csv(clean_final,"final_cleaned_scores.csv", row.names = FALSE)
+```
+
