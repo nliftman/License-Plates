@@ -54,19 +54,97 @@ editor_options:
 
 **Package Comparison**
 
--   pros/cons of each package
--   Addresses all requirements of project
--   Compatibility with other elements in project
--   Ease of use
--   Computational efficiency for scale of data
--   No software bugs that will impair use case
--   Availability of relevant examples
--   Look at open issues in github
+**Leetspeak-encoder-decoder** -
 
+-   This function theoretically simplifies the word needed to be done
+    since it acts as a leetspeak decoder that can take in leetspeak
+    phrases and decode them to “regular” english.
+
+-   Pros:
+
+    -   Very easy to call: decode_leet(text, lang)
+
+    -   Gives you a replacement dictionary that is used
+
+-   Cons:
+
+    -   Not pip installable so integration is messy (have to clone repo)
+
+    -   It produces outputs that can be lossy or normalized, which is
+        risky since ever character matters in plates
+
+    -   Has a low adoption signal which can be seen by the low forks and
+        ratings. This could mean higher maintenance risks.
+
+**RapidFuzz**
+
+-   This function can be used to find similarity between words to find
+    matches/closest match. This is paired with additional functions we
+    write to do one character variant replacement, normalization, and
+    any substring matches.
+
+-   Pros:
+
+    -   Very fast and actively maintained
+
+    -   Has useful APIs: fuzz.ratio, fuzz.partial_ratio, process.extract
+
+    -   It is great for finding the closest “bad-word candidate” after
+        normalizing
+
+-   Cons:
+
+    -   Requires own preprocessing
+
+    -   Might require some threshold tuning to figure out what score
+        means its a good enough match
+
+-   Using this package requires that we need to do additional
+    work/preprocessing
+
+-   Issues on github: 31; Forks: 151
+
+-   Installed using pip
+
+-   Plenty of examples used
+
+**The Fuzz**
+
+-   This function can be used to find similarity between words to find
+    matches/closest match. This is paired with additional functions we
+    write to do one character variant replacement, normalization, and
+    any substring matches.
+
+-   Pros:
+
+    -   Has a simple API with lots of tutorials on how to use
+
+    -   Has been used in lots of older codes
+
+-   Cons:
+
+    -   Typically slower than rapidfuzz
+
+    -   Has the same use case as rapidfuz
+
+-   Using this package requires that we need to do additional
+    work/preprocessing
+
+-   Issues on github: 39; Forks: 154
+
+-   Installed using pip
+
+-   Plenty of examples used
 
 **Demo**
 
 Insert code demo here
 
-
 **Our package choice**
+
+Our package choice is RapidFuzz. This is due to the its versatility and
+maintenance. In our project we expect users to be able to enter a
+license plate and quickly and easily be able to output a liklihood of
+getting approved. The use of RapidFuzz with access to several APIs will
+facilitate the a fast and simple user experience which we would like to
+prioritize.
