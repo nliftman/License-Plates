@@ -130,4 +130,4 @@ editor_options:
 
     **Assumptions**:\
     
-![Interaction between the components](components_interaction.png)
+![Interaction between the components](interaction.png)
