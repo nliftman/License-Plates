@@ -129,4 +129,5 @@ editor_options:
     reason for score, type string
 
     **Assumptions**:\
-    ![Interaction between the components](components_interaction.png)
+    
+![Interaction between the components](components_interaction.png)
