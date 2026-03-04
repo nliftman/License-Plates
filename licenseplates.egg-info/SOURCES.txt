@@ -1,0 +1,9 @@
+LICENSE
+README.md
+pyproject.toml
+requirements.txt
+licenseplates.egg-info/PKG-INFO
+licenseplates.egg-info/SOURCES.txt
+licenseplates.egg-info/dependency_links.txt
+licenseplates.egg-info/requires.txt
+licenseplates.egg-info/top_level.txt
