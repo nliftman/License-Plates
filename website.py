@@ -44,5 +44,9 @@ if sum(c.isdigit() for c in user_lic) == 5 and sum(c.isalpha() for c in user_lic
 if bool(re.fullmatch(r"^\d{5}[a-zA-Z]\d$", user_lic)):
      st.write(user_lic, "must be for a commercial vehical")
 
+clicked = st.button("See More Information")
+
+if(clicked):
+     st.write("This is the more info")
 
 uploaded_lics = st.file_uploader("Upload csv of License Plates", type = "csv")
