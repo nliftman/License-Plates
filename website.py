@@ -45,4 +45,8 @@ if bool(re.fullmatch(r"^\d{5}[a-zA-Z]\d$", user_lic)):
      st.write(user_lic, "must be for a commercial vehical")
 
 
+clicked = st.button("See More Information")
+if clicked:
+     st.write("Here is the additional information")
+
 uploaded_lics = st.file_uploader("Upload csv of License Plates", type = "csv")
