@@ -22,14 +22,11 @@ print(f"The language dictionary for language  '{language_id}' is: {language_dict
 # test_text = "Hello, World!"
 # test_text = "H3LL0!"
 plate_cases = [
+    "H3LL0"
     "H8TR",
     "A55MAN",
     "K1LLR",
-    "F4GZ",
-    "N0H8",
     "GO2HELL",
-    "PHUK",
-    "FUQ",
 ]
 
 # encoded_text = multilang.encode_leet(test_text, 'en')
@@ -42,7 +39,7 @@ for plate in plate_cases:
 print(f"Decoded Text: {decoded_list}")
 
 
-
+print()
 
 # Package 2: rapid fuzz
 
@@ -54,7 +51,9 @@ import numpy as np
 import pandas as pd
 
 PLATES_ROOT = Path(__file__).resolve().parents[2]   # -> License-Plates/
-DATA_PATH = PLATES_ROOT / "data" / "uniqueevilmasterdoc.csv"
+# DATA_PATH = PLATES_ROOT / "data" / "uniqueevilmasterdoc.csV"
+DATA_PATH = PLATES_ROOT / "data" / "cleaned_evilwords.csv"
+
 
 df = pd.read_csv(DATA_PATH)
 
@@ -121,7 +120,7 @@ def thefuzz_fuzzymatching(plate, words_list):
     return ans
 
 # Testing functions
-test_plates = ['BBOMBS', 'VTARDED', 'BUTCH']
+test_plates = ['H3LL', 'VTARDED', 'GTK1LR', 'BUTCH']
 
 print("=== Package 2: RapidFuzz ===")
 for test_plate in test_plates: 
@@ -137,7 +136,7 @@ for test_plate in test_plates:
 
     if exct_match == False: 
         fuzz_res = rapid_fuzzymatching(decoded, words_list)
-        print(fuzz_res)
+        print("Fuzzy matching: ", fuzz_res)
         print()
     else: 
         print("Word matches: ", exct_match)
@@ -157,7 +156,7 @@ for test_plate in test_plates:
 
     if exct_match == False: 
         fuzz_res = thefuzz_fuzzymatching(decoded, words_list)
-        print(fuzz_res)
+        print("Fuzzy matching: ", fuzz_res)
         print()
     else: 
         print("Word matches: ", exct_match)
