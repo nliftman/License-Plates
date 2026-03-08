@@ -10,6 +10,10 @@ from pathlib import Path
 from unscrambler import normalize, char_replace
 from unscrambler import substr_exact_match, rapid_fuzzymatching
 
+#make sure there is no button when you start
+if 'show_button' not in st.session_state:
+    st.session_state['show_button'] = False
+
 band_list = ['ABM', 'ANO', 'APE', 'ARS', 'ASB', 'ASS', 'BAD', 'BAG',
              'BED', 'BRA', 'BUN', 'BUT', 'BVD', 'CHP', 'CIA',
              'COC', 'COK', 'CON', 'COP', 'CQC', 'CQK', 'CQN', 'CUL',
@@ -31,13 +35,14 @@ band_list = ['ABM', 'ANO', 'APE', 'ARS', 'ASB', 'ASS', 'BAD', 'BAG',
              'USR', 'VUC', 'VUK', 'VUX', 'WAD', 'WOP', 'WQP', 'YEP', 'YID']
 
 def validation_rules(plate):
+    """Initial checks for license plate basics"""
     # fir go through her checks
     msg = None
     if len(plate) > 7 or len(plate) < 2:
-        msg = plate + "is an invalid length"
+        msg = plate + " is an invalid length"
 
     elif not plate.isalnum() and len(plate)>0:
-        msg = plate + "has invalid characters"
+        msg = plate + " has invalid characters"
 
     elif sum(c.isdigit() for c in plate) == 4 and sum(c.isalpha() for c in plate) == 2:
         msg = plate + "must be for Purple Heart Vessels, Disabled Person, or Disabled Veteran"
@@ -56,8 +61,8 @@ def validation_rules(plate):
         msg = plate + "contains the restricted letter combination", bad_item
     return msg
 
-
 def evaluate_plate(plate: str, words_list: list[str]) -> dict:
+    """Evaluate the plate with the fuzzymatching"""
     normalized = normalize(plate)
     decoded = char_replace(normalized)
     cleaned = decoded[0]
@@ -81,11 +86,40 @@ def evaluate_plate(plate: str, words_list: list[str]) -> dict:
         else:
             return "No Fuzzy Matches"
 
+#getting the files for the checking evil
+PLATES_ROOT = Path(__file__).resolve().parent  # -> License-Plates/
+DATA_PATH = PLATES_ROOT / "datacleaning" / "master_counts_scores.csv"
+
+df = pd.read_csv(DATA_PATH)
+evil_list = df['nospace'].tolist() # bad words list
+
+def check_evil(plate):
+    """Initial check"""
+    if plate in evil_list:
+        return("This plate contains a restricted word")
+    else:
+        return("This plate does not contain a restricted word")
+
+def button_output(plate):
+    """Running the plate against our list"""
+    if plate in evil_list:
+        row = df.loc[df['nospaces'] == plate]
+        hate = list(row['hate_speech'])
+        offensive = list(row['offensive_language'])
+        total_count = list(row['count_words'])
+        raiting = list(row['total_rating'])
+        txt = f"""Your plate contains a word that appeared in {total_count} tweets marked as hatefull or offensive.
+        This word appeared in tweets which {hate} people marked as hatefull and {offensive} marked as offensive.
+        If all of these are zero, then it appeared in no tweets but was still captured by our hatefull algorithm."""
+        print(txt)
+    else:
+        return("This plate does not contain a restricted word")
 
 # Streamlit stuff
 st.title("License Plate Tester 🚗")
 
 tab1, tab2 = st.tabs(["Single Plate", "Batch CSV"])
+
 
 PLATES_ROOT = Path(__file__).resolve().parent  # -> License-Plates/
 DATA_PATH = PLATES_ROOT / "datacleaning" / "cleaned_evilwords.csv"
@@ -103,14 +137,16 @@ with tab1:
     else:
         matches = evaluate_plate(user_lic, words_list)
         st.write(matches)
-     # CONTINUE WITH REST OF SCORING STUFF HERE 
-     
-     
-    clicked = st.button("See More Information")
+        evil = check_evil(user_lic)
+        if evil == "This plate contains a restricted word":
+            st.write(evil)
+     #add a button for more information but only when it is restricted
+            clicked = st.button("See More Information")
+            if(clicked):
+                st.write(button_output(user_lic))
 
-    if(clicked):
-        st.write("This is the more info")
-          
+        
+        
 # Batch License Plates
 with tab2:
      # maybe we can provide them a template csv or something
