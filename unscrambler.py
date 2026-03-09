@@ -177,96 +177,96 @@ test_plates = ['LDYNBLU',
 decisions = []
 notes = []
 
-print("=== Package 2: RapidFuzz ===")
-for i, test_plate in enumerate(plates_list):
-    # print("Test for plate: ", test_plate)
-    norm_plate = normalize(test_plate)
-    # print("Normalized: ",norm)
+# print("=== Package 2: RapidFuzz ===")
+# for i, test_plate in enumerate(plates_list):
+#     # print("Test for plate: ", test_plate)
+#     norm_plate = normalize(test_plate)
+#     # print("Normalized: ",norm)
 
-    decoded_plate = char_replace(norm_plate)
-    cleaned_plate = decoded_plate[0]
-    # print("Variants Replaced: ",decoded)
-    # fir go through her checks
-    if len(test_plate) > 7 or len(test_plate) < 2:
-        # print(test_plate, "is an invalid length")
-        decisions.append("N")
-        notes.append("invalid length")
+#     decoded_plate = char_replace(norm_plate)
+#     cleaned_plate = decoded_plate[0]
+#     # print("Variants Replaced: ",decoded)
+#     # fir go through her checks
+#     if len(test_plate) > 7 or len(test_plate) < 2:
+#         # print(test_plate, "is an invalid length")
+#         decisions.append("N")
+#         notes.append("invalid length")
 
-    elif not test_plate.isalnum() and len(test_plate)>0:
-        # print(test_plate, "has invalid characters")
-        decisions.append("N")
-        notes.append("invalid characters")
+#     elif not test_plate.isalnum() and len(test_plate)>0:
+#         # print(test_plate, "has invalid characters")
+#         decisions.append("N")
+#         notes.append("invalid characters")
 
-    elif sum(c.isdigit() for c in test_plate) == 4 and sum(c.isalpha() for c in test_plate) == 2:
-        # print(test_plate, "must be for Purple Heart Vessels,
-        # Disabled Person, or Disabled Veteran")
-        decisions.append("N")
-        notes.append("must be for Purple Heart Vessels, Disabled Person, or Disabled Veteran")
+#     elif sum(c.isdigit() for c in test_plate) == 4 and sum(c.isalpha() for c in test_plate) == 2:
+#         # print(test_plate, "must be for Purple Heart Vessels,
+#         # Disabled Person, or Disabled Veteran")
+#         decisions.append("N")
+#         notes.append("must be for Purple Heart Vessels, Disabled Person, or Disabled Veteran")
 
-    elif sum(c.isdigit() for c in test_plate) == 5 and sum(c.isalpha() for c in test_plate) == 1:
-        # print(test_plate, "must be for a commercial vehical")
-        decisions.append("N")
-        notes.append("must be for commerical vehicle")
+#     elif sum(c.isdigit() for c in test_plate) == 5 and sum(c.isalpha() for c in test_plate) == 1:
+#         # print(test_plate, "must be for a commercial vehical")
+#         decisions.append("N")
+#         notes.append("must be for commerical vehicle")
 
-    elif sum(c.isdigit() for c in test_plate) == 5 and sum(c.isalpha() for c in test_plate) == 2:
-        # print(test_plate, "must be for a Disabled Person, or Disabled Veteran")
-        decisions.append("N")
-        notes.append("must be for disabled person or veteran")
+#     elif sum(c.isdigit() for c in test_plate) == 5 and sum(c.isalpha() for c in test_plate) == 2:
+#         # print(test_plate, "must be for a Disabled Person, or Disabled Veteran")
+#         decisions.append("N")
+#         notes.append("must be for disabled person or veteran")
 
-    elif bool(re.fullmatch(r"^\d{5}[a-zA-Z]\d$", test_plate)):
-        # print(test_plate, "must be for a commercial vehical")
-        decisions.append("N")
-        notes.append("must be for commerical vehicle")
+#     elif bool(re.fullmatch(r"^\d{5}[a-zA-Z]\d$", test_plate)):
+#         # print(test_plate, "must be for a commercial vehical")
+#         decisions.append("N")
+#         notes.append("must be for commerical vehicle")
 
-    # user normalized + decoded to catch any bad items in the plate
-    elif any(item in cleaned_plate.upper() for item in band_list):
-        bad_item = next(item for item in band_list if item in cleaned_plate.upper())
-        # print(decoded_plate, "contains the restricted letter combination", bad_item)
-        decisions.append("N")
-        note = "contains the restricted letter combination" + bad_item
-        notes.append(note)
+#     # user normalized + decoded to catch any bad items in the plate
+#     elif any(item in cleaned_plate.upper() for item in band_list):
+#         bad_item = next(item for item in band_list if item in cleaned_plate.upper())
+#         # print(decoded_plate, "contains the restricted letter combination", bad_item)
+#         decisions.append("N")
+#         note = "contains the restricted letter combination" + bad_item
+#         notes.append(note)
 
-    # this now goes on to substring match + fuzz matching (if needed)
-    else:
-        exct_match = substr_exact_match(cleaned_plate, words_list)
-        # print("Exact matches? ",exct_match)
+#     # this now goes on to substring match + fuzz matching (if needed)
+#     else:
+#         exct_match = substr_exact_match(cleaned_plate, words_list)
+#         # print("Exact matches? ",exct_match)
 
-        if exct_match == False:
-            fuzz_res = rapid_fuzzymatching(decoded_plate, words_list)
-            # print("Fuzzy matching: ", fuzz_res)
-            # print()
-            if fuzz_res is not None:
-                decisions.append("N")
-                notes.append(fuzz_res)
-            else:
-                decisions.append("Y")
-                notes.append("Approved")
-        else:
-            # print("Word matches: ", exct_match)
-            # print()
-            decisions.append("N")
-            notes.append(exct_match)
+#         if exct_match == False:
+#             fuzz_res = rapid_fuzzymatching(decoded_plate, words_list)
+#             # print("Fuzzy matching: ", fuzz_res)
+#             # print()
+#             if fuzz_res is not None:
+#                 decisions.append("N")
+#                 notes.append(fuzz_res)
+#             else:
+#                 decisions.append("Y")
+#                 notes.append("Approved")
+#         else:
+#             # print("Word matches: ", exct_match)
+#             # print()
+#             decisions.append("N")
+#             notes.append(exct_match)
 
-# dff = pd.DataFrame({
-#     "plate": test_plates,
-#     "our decision": decisions,
-#     "notes": notes
-# })
-# print(dff)
+# # dff = pd.DataFrame({
+# #     "plate": test_plates,
+# #     "our decision": decisions,
+# #     "notes": notes
+# # })
+# # print(dff)
 
 
 
-df2['our decision'] = decisions
-df2['notes'] = notes
+# df2['our decision'] = decisions
+# df2['notes'] = notes
 
-filtered_df = df2[df2['status'] != df2['our decision']]
-filtered_df.to_csv("unmatched.csv", index=False)
+# filtered_df = df2[df2['status'] != df2['our decision']]
+# filtered_df.to_csv("unmatched.csv", index=False)
 
-df2.to_csv("testing.csv", index=False)
+# df2.to_csv("testing.csv", index=False)
 
-num_tot = len(df2)
-num_cor = num_tot - len(filtered_df)
-print(num_cor/num_tot)
+# num_tot = len(df2)
+# num_cor = num_tot - len(filtered_df)
+# print(num_cor/num_tot)
 
-unique_notes = df2['notes'].astype(str).unique()
-print(unique_notes)
+# unique_notes = df2['notes'].astype(str).unique()
+# print(unique_notes)
