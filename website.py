@@ -90,8 +90,8 @@ def evaluate_plate(plate: str, words_list: list[str]) -> dict:
 PLATES_ROOT = Path(__file__).resolve().parent  # -> License-Plates/
 DATA_PATH = PLATES_ROOT / "datacleaning" / "master_counts_scores.csv"
 
-df = pd.read_csv(DATA_PATH)
-evil_list = df['nospace'].tolist() # bad words list
+df_scores = pd.read_csv(DATA_PATH)
+evil_list = df_scores['nospace'].tolist() # bad words list
 
 def check_evil(plate):
     """Initial check"""
@@ -103,7 +103,8 @@ def check_evil(plate):
 def button_output(plate):
     """Running the plate against our list"""
     if plate in evil_list:
-        row = df.loc[df['nospaces'] == plate]
+        row = df_scores.loc[df_scores['nospace'] == plate]
+        print(row)
         hate = list(row['hate_speech'])
         offensive = list(row['offensive_language'])
         total_count = list(row['count_words'])
@@ -112,6 +113,7 @@ def button_output(plate):
         This word appeared in tweets which {hate} people marked as hatefull and {offensive} marked as offensive.
         If all of these are zero, then it appeared in no tweets but was still captured by our hatefull algorithm."""
         print(txt)
+        return txt
     else:
         return("This plate does not contain a restricted word")
 
