@@ -1,5 +1,7 @@
+"""This module is run to go from the unique master evil
+words doc to the master counts document which 
+contains each word and its scores."""
 #libraries
-import math
 import pandas as pd
 import numpy as np
 
@@ -34,9 +36,9 @@ cleaned_df = cleaned_df[~cleaned_df.spaces.str.contains(".", regex = False)]
 #load the big dataset
 off = pd.read_csv('labeled_data.csv')
 off.head()
-#remove class of 2 
+#remove class of 2
 filt = off[off['class'] < 2]
-#create hate speech and offensive language scores 
+#create hate speech and offensive language scores
 filt['hate_score'] = filt['hate_speech']/filt['count']
 filt['off_score'] = filt['offensive_language']/filt['count']
 
@@ -61,7 +63,7 @@ for i, value in enumerate(off_words):
     off['hate_speech'][i] = sum(newdf['hate_speech'])
     off['offensive_language'][i] = sum(newdf['offensive_language'])
 
-#find out how many people ranked a tweet with this word in it 
+#find out how many people ranked a tweet with this word in it
 off['total_rating'] = off['hate_speech'] + off['offensive_language']
 #find out what percent ranked it hate and offensive out of the total
 off['hate_out_tot'] = off['hate_speech']/off['total_rating']
