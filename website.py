@@ -1,12 +1,10 @@
 """ Creates the website which validates license plates"""
 
 import re
+from pathlib import Path
 
 import streamlit as st
 import pandas as pd
-import numpy as np
-import sys
-from pathlib import Path
 from unscrambler import normalize, char_replace
 from unscrambler import substr_exact_match, rapid_fuzzymatching
 
@@ -61,44 +59,41 @@ def validation_rules(plate):
         msg = plate + "contains the restricted letter combination", bad_item
     return msg
 
-def evaluate_plate(plate: str, words_list: list[str]) -> dict:
+def evaluate_plate(plate: str, list_words: list[str]) -> dict:
     """Evaluate the plate with the fuzzymatching"""
     normalized = normalize(plate)
     decoded = char_replace(normalized)
     cleaned = decoded[0]
-    exct_match = substr_exact_match(cleaned, words_list)
+    exct_match = substr_exact_match(cleaned, list_words)
     # print("Exact matches? ",exct_match
     if exct_match is not False:
         print("Substring matches?")
         print(exct_match)
         return "found exact substring match: " + exct_match
-    
-    else: # exct_match is False
-        fuzz_res = rapid_fuzzymatching(decoded, words_list)
+    fuzz_res = rapid_fuzzymatching(decoded, list_words)
         # print("Fuzzy matching: ", fuzz_res)
-
-        if fuzz_res is not None:
-            print("Fuzzy matching score: ", fuzz_res[0][1])
-            print(plate, " contains the word ", fuzz_res[0][0])
-            print()
-            msg = plate + " contains the word " + fuzz_res[0][0] + " (score: " + str(fuzz_res[0][1]) + ")"
-            return msg
-        else:
-            return "No Fuzzy Matches"
+    if fuzz_res is not None:
+        print("Fuzzy matching score: ", fuzz_res[0][1])
+        print(plate, " contains the word ", fuzz_res[0][0])
+        print()
+        msg = (plate + " contains the word " +
+               fuzz_res[0][0] + " (score: " +
+               str(fuzz_res[0][1]) + ")")
+        return msg
+    return "No Fuzzy Matches"
 
 #getting the files for the checking evil
-PLATES_ROOT = Path(__file__).resolve().parent  # -> License-Plates/
-DATA_PATH = PLATES_ROOT / "datacleaning" / "master_counts_scores.csv"
+plates_root = Path(__file__).resolve().parent  # -> License-Plates/
+data_path = plates_root / "datacleaning" / "master_counts_scores.csv"
 
-df_scores = pd.read_csv(DATA_PATH)
+df_scores = pd.read_csv(data_path)
 evil_list = df_scores['nospace'].tolist() # bad words list
 
 def check_evil(plate):
     """Initial check"""
     if plate in evil_list:
-        return("This plate contains a restricted word")
-    else:
-        return("This plate does not contain a restricted word")
+        return "This plate contains a restricted word"
+    return "This plate does not contain a restricted word"
 
 def button_output(plate):
     """Running the plate against our list"""
@@ -108,14 +103,14 @@ def button_output(plate):
         hate = list(row['hate_speech'])
         offensive = list(row['offensive_language'])
         total_count = list(row['count_words'])
-        raiting = list(row['total_rating'])
-        txt = f"""Your plate contains a word that appeared in {total_count} tweets marked as hatefull or offensive.
-        This word appeared in tweets which {hate} people marked as hatefull and {offensive} marked as offensive.
-        If all of these are zero, then it appeared in no tweets but was still captured by our hatefull algorithm."""
-        print(txt)
+        txt = f"""Your plate contains a word that appeared in
+        {total_count} tweets marked as hatefull or offensive.
+        This word appeared in tweets which {hate} people marked as
+        hatefull and {offensive} marked as offensive.
+        If all of these are zero, then it appeared in no tweets but was
+        still captured by our hatefull algorithm."""
         return txt
-    else:
-        return("This plate does not contain a restricted word")
+    return"This plate does not contain a restricted word"
 
 # Streamlit stuff
 st.title("License Plate Tester 🚗")
@@ -123,32 +118,30 @@ st.title("License Plate Tester 🚗")
 tab1, tab2 = st.tabs(["Single Plate", "Batch CSV"])
 
 
-PLATES_ROOT = Path(__file__).resolve().parent  # -> License-Plates/
-DATA_PATH = PLATES_ROOT / "datacleaning" / "cleaned_evilwords.csv"
+plates_root = Path(__file__).resolve().parent  # -> License-Plates/
+data_path = plates_root / "datacleaning" / "cleaned_evilwords.csv"
 
-df = pd.read_csv(DATA_PATH)
+df = pd.read_csv(data_path)
 words_list = df['nospace'].tolist() # bad words list
 
 # Single License Plate
 with tab1:
     user_lic = st.text_input("Please write your desired license plate:")
-    msg = validation_rules(user_lic)
+    mesg = validation_rules(user_lic)
 
-    if msg is not None:
-        st.write(msg)
+    if mesg is not None:
+        st.write(mesg)
     else:
         matches = evaluate_plate(user_lic, words_list)
         st.write(matches)
-        evil = check_evil(user_lic)
-        if evil == "This plate contains a restricted word":
-            st.write(evil)
+        EVIL = check_evil(user_lic)
+        if EVIL == "This plate contains a restricted word":
+            st.write(EVIL)
      #add a button for more information but only when it is restricted
             clicked = st.button("See More Information")
-            if(clicked):
+            if clicked:
                 st.write(button_output(user_lic))
 
-        
-        
 # Batch License Plates
 with tab2:
      # maybe we can provide them a template csv or something
@@ -156,33 +149,27 @@ with tab2:
 
     if uploaded_lics is not None:
         input_df = pd.read_csv(uploaded_lics)
-
         if input_df.empty:
             st.write("The uploaded CSV is empty.")
-               
-        elif "plate" not in input_df.columns: # if not empty, check for correct format (we can add more if needed)
+        elif "plate" not in input_df.columns:
+            # if not empty, check for correct format (we can add more if needed)
             st.write("CSV must contain a column called 'plate'.")
-               
         else:
             decisions = []
             reasons = []
             scores = []
-            for plate in input_df['plate']: 
+            for line in input_df['plate']:
                     # 1. first check if violates basic rules
-                msg = validation_rules(plate)
-                if msg is not None:
+                message = validation_rules(line)
+                if message is not None:
                     decisions.append("Rejected")
-                    reasons.append(msg)
+                    reasons.append(message)
                     scores.append("n/a")
                     # 2. check for any matches with unscrambler + evaluate function
                 else:
-                         # have to fix this part later, temporary will work on this tmr
+                # have to fix this part later, temporary will work on this tmr
                     result = evaluate_plate("plate")
                     decisions.append("???")
                     reasons.append(result)
                     scores.append("n/a")
                          
-                         
-                    
-          
-          
