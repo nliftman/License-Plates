@@ -3,104 +3,181 @@ import unittest
 import numpy as np
 
 from streamlit.testing.v1 import AppTest
-import website
+#from website import check_evil
 
-class TestWeb(unittest.TestCase):
+class TestUnit(unittest.TestCase):
     """A custom exception class for testing website.py's Exceptions.
 
     Ensures website.py processes correctly with edge cases and error conditions maybe we will use this to test the fuzzy look up and scores
     """
+    # def test_evilcheck1(self):
+    #     """
+    #     Verifies the check_evil method is working correctly.
+    #     """
+    #     plate = "Happy"
+    #     self.assertEqual("This plate does not contain a restricted word", check_evil(plate))
 
-def test_app_interact1():
-    at = AppTest.from_file("website.py")
-    at.run()
+    # def test_evilcheck2(self):
+    #     """
+    #     Verifies the check_evil method is working correctly.
+    #     """
+    #     plate = "beaner"
+    #     self.assertEqual("This plate contains a restricted word", check_evil(plate))
 
-    # Check if app runs
-    assert not at.exception
+class TestWeb():
+    """A custom exception class for testing website.py function.
 
-    at.text_input[0].set_value("ASSMAN").run()
+    Ensures website.py processes correctly and displays fuzzy look up and scores
+    """
+    def test_app_interact1(self):
+        at = AppTest.from_file("website.py")
+        at.run()
 
-    assert at.text_input.value == "ASSMAN"
+        # Check if app runs
+        assert not at.exception
 
-    assert at.markdown[0].value == "ASSMAN contains the restricted letter combination ASS"
+        at.text_input[0].set_value("ASSMAN").run()
 
-def test_app_interact2():
-    at = AppTest.from_file("website.py")
-    at.run()
+        assert at.text_input[0].value == "ASSMAN"
+        print(at.markdown[0].value)
+        assert at.markdown[0].value == "ASSMAN contains the restricted letter combination ASS"
 
-    # Check if app runs
-    assert not at.exception
+    def test_app_interact2(self):
+        at = AppTest.from_file("website.py")
+        at.run()
 
-    at.text_input[0].set_value("A").run()
+        # Check if app runs
+        assert not at.exception
 
-    assert at.text_input.value == "A"
+        at.text_input[0].set_value("A").run()
 
-    assert at.markdown[0].value == "A is an invalid length"
+        assert at.text_input[0].value == "A"
 
-def test_app_interact3():
-    at = AppTest.from_file("website.py")
-    at.run()
+        assert at.markdown[0].value == "A is an invalid length"
 
-    # Check if app runs
-    assert not at.exception
+    def test_app_interact3(self):
+        at = AppTest.from_file("website.py")
+        at.run()
 
-    at.text_input[0].set_value("A#$&me").run()
+        # Check if app runs
+        assert not at.exception
 
-    assert at.text_input.value == "A#$&me"
+        at.text_input[0].set_value("A#$&me").run()
 
-    assert at.markdown[0].value == "A#$&me has invalid characters"
+        assert at.text_input[0].value == "A#$&me"
 
-def test_app_interact4():
-    at = AppTest.from_file("website.py")
-    at.run()
+        assert at.markdown[0].value == "A#$&me has invalid characters"
 
-    # Check if app runs
-    assert not at.exception
+    def test_app_interact4(self):
+        at = AppTest.from_file("website.py")
+        at.run()
 
-    at.text_input[0].set_value("aa2345").run()
+        # Check if app runs
+        assert not at.exception
 
-    assert at.text_input.value == "aa2345"
+        at.text_input[0].set_value("aa2345").run()
 
-    assert at.markdown[0].value == "aa2345 must be for Purple Heart Vessels, Disabled Person, or Disabled Veteran"
+        assert at.text_input[0].value == "aa2345"
 
-def test_app_interact5():
-    at = AppTest.from_file("website.py")
-    at.run()
+        assert at.markdown[0].value == "aa2345 must be for Purple Heart Vessels, Disabled Person, or Disabled Veteran"
 
-    # Check if app runs
-    assert not at.exception
+    def test_app_interact5(self):
+        at = AppTest.from_file("website.py")
+        at.run()
 
-    at.text_input[0].set_value("12345t").run()
+        # Check if app runs
+        assert not at.exception
 
-    assert at.text_input.value == "12345t"
+        at.text_input[0].set_value("12345t").run()
 
-    assert at.markdown[0].value == "12345t must be for a commercial vehical"
+        assert at.text_input[0].value == "12345t"
 
-def test_app_interact6():
-    at = AppTest.from_file("website.py")
-    at.run()
+        assert at.markdown[0].value == "12345t must be for a commercial vehical"
 
-    # Check if app runs
-    assert not at.exception
+    def test_app_interact6(self):
+        at = AppTest.from_file("website.py")
+        at.run()
 
-    at.text_input[0].set_value("12345tb").run()
+        # Check if app runs
+        assert not at.exception
 
-    assert at.text_input.value == "12345tb"
+        at.text_input[0].set_value("12345tb").run()
 
-    assert at.markdown[0].value == "12345tb must be for a Disabled Person, or Disabled Veteran"
+        assert at.text_input[0].value == "12345tb"
 
-def test_app_interact7():
-    at = AppTest.from_file("website.py")
-    at.run()
+        assert at.markdown[0].value == "12345tb must be for a Disabled Person, or Disabled Veteran"
 
-    # Check if app runs
-    assert not at.exception
+    def test_app_interact7(self):
+        at = AppTest.from_file("website.py")
+        at.run()
 
-    at.text_input[0].set_value("11111A1").run()
+        # Check if app runs
+        assert not at.exception
 
-    assert at.text_input.value == "11111A1"
+        at.text_input[0].set_value("11111A1").run()
 
-    assert at.markdown[0].value == "11111A1  must be for a commercial vehical"
+        assert at.text_input[0].value == "11111A1"
 
-    ##We will add more tests for the 2nd page its just not built out yet
-    
+        assert at.markdown[0].value == "11111A1 must be for a commercial vehical"
+
+    def test_app_interact8(self):
+        """
+        Verifies the evaluate_plate method has correct formatting.
+        """
+        at = AppTest.from_file("website.py")
+        at.run()
+
+        # Check if app runs
+        assert not at.exception
+
+        at.text_input[0].set_value("Girly45").run()
+
+        assert at.text_input[0].value == "Girly45"
+
+        assert at.markdown[0].value == "This plate closely resembles a word or phrase that may be considered inappropriate."
+        at.button[0].click().run()
+        expected = """
+        **Detected similarity**
+
+        - Possible match: girls
+        - Similarity score: 83.33333333333334%
+        - Detection method: similarity matching
+        """
+
+        assert " ".join(at.markdown[1].value.split()) == " ".join(expected.split())
+
+
+    def test_app_interact9(self):
+        """
+        Verifies the button_output method has correct formatting.
+        """
+        at = AppTest.from_file("website.py")
+        at.run()
+
+        # Check if app runs
+        assert not at.exception
+
+        at.text_input[0].set_value("poop").run()
+
+        assert at.text_input[0].value == "poop"
+        assert at.markdown[0].value == "This plate contains a restricted word."
+        
+        at.button[0].click().run()
+
+        expected = """
+        **Detected restricted word**
+
+        - Detected word: poo
+        - Detection method: exact match
+        """
+
+        assert " ".join(at.markdown[1].value.split()) == " ".join(expected.split())
+        
+        expected2 = """Your plate contains a word that appeared in
+        [92] tweets marked as hatefull or offensive.
+        This word appeared in tweets which [32] people marked as
+        hatefull and [256] marked as offensive.
+        If all of these are zero, then it appeared in no tweets but was
+        still captured by our hatefull algorithm."""
+
+        assert " ".join(at.markdown[2].value.split()) == " ".join(expected2.split())
