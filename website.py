@@ -69,18 +69,16 @@ def evaluate_plate(plate: str, list_words: list[str]) -> dict:
     if exct_match is not False:
         print("Substring matches?")
         print(exct_match)
-        return "found exact substring match: " + exct_match
+        return "substring match", exct_match
     fuzz_res = rapid_fuzzymatching(decoded, list_words)
         # print("Fuzzy matching: ", fuzz_res)
     if fuzz_res is not None:
         print("Fuzzy matching score: ", fuzz_res[0][1])
         print(plate, " may contain the word ", fuzz_res[0][0])
         print()
-        msg = (plate + " may contain the word " +
-               fuzz_res[0][0] + " (score: " +
-               str(fuzz_res[0][1]) + ")")
+        msg = ("fuzzmatch", fuzz_res[0][0], fuzz_res[0][1])
         return msg
-    return "No Fuzzy Matches"
+    return None
 
 #getting the files for the checking evil
 plates_root = Path(__file__).resolve().parent  # -> License-Plates/
@@ -89,11 +87,11 @@ data_path = plates_root / "datacleaning" / "master_counts_scores.csv"
 df_scores = pd.read_csv(data_path)
 evil_list = df_scores['nospace'].tolist() # bad words list
 
-def check_evil(plate):
-    """Initial check"""
-    if plate in evil_list:
-        return "This plate contains a restricted word"
-    return "This plate does not contain a restricted word"
+# def check_evil(plate):
+#     """Initial check"""
+#     if plate in evil_list:
+#         return "This plate contains a restricted word"
+#     return "This plate does not contain a restricted word"
 
 def button_output(plate):
     """Running the plate against our list"""
@@ -117,13 +115,6 @@ st.title("License Plate Tester 🚗")
 
 tab1, tab2 = st.tabs(["Single Plate", "Batch CSV"])
 
-
-plates_root = Path(__file__).resolve().parent  # -> License-Plates/
-data_path = plates_root / "datacleaning" / "cleaned_evilwords.csv"
-
-df = pd.read_csv(data_path)
-words_list = df['nospace'].tolist() # bad words list
-
 # Single License Plate
 with tab1:
      user_lic = st.text_input("Please write your desired license plate:")
@@ -133,15 +124,39 @@ with tab1:
           if mesg is not None:
                st.write(mesg)
           else:
-               matches = evaluate_plate(user_lic, words_list)
-               st.write(matches)
-               EVIL = check_evil(user_lic)
-               if EVIL == "This plate contains a restricted word":
-                    st.write(EVIL)
-               #add a button for more information but only when it is restricted
+               matches = evaluate_plate(user_lic, evil_list)
+               button_input = user_lic
+               if matches is not None: 
+                    
+                    match_type = matches[0]
+                    if match_type == "substring match":
+                         st.write("This plate contains a restricted word.")
+                         exact_msg = f"""
+                         **Detected restricted word**
+                         
+                         - Detected word: {matches[1]}
+                         - Detection method: exact match
+                         """
+                         
+                    else:
+                         st.write("This plate closely resembles a word or phrase that may be considered inappropriate.")
+                         exact_msg = f"""
+                         **Detected similarity**
+
+                         - Possible match: {matches[1]}
+                         - Similarity score: {matches[2]}%
+                         - Detection method: similarity matching
+                         """
+                    #add a button for more information but only when it is restricted
+                    
+                    button_input = matches[1]
                     clicked = st.button("See More Information")
                     if clicked:
-                         st.write(button_output(user_lic))
+                         st.markdown(exact_msg)
+                         st.write(button_output(button_input))
+               else: 
+                    st.write("This plate does not contain a restricted word")
+               
 
 # Batch License Plates
 with tab2:
