@@ -43,20 +43,20 @@ def validation_rules(plate):
         msg = plate + " has invalid characters"
 
     elif sum(c.isdigit() for c in plate) == 4 and sum(c.isalpha() for c in plate) == 2:
-        msg = plate + "must be for Purple Heart Vessels, Disabled Person, or Disabled Veteran"
+        msg = plate + " must be for Purple Heart Vessels, Disabled Person, or Disabled Veteran"
 
     elif sum(c.isdigit() for c in plate) == 5 and sum(c.isalpha() for c in plate) == 1:
-        msg = plate + "must be for a commercial vehical"
+        msg = plate + " must be for a commercial vehical"
 
     elif sum(c.isdigit() for c in plate) == 5 and sum(c.isalpha() for c in plate) == 2:
-        msg = plate +  "must be for a Disabled Person, or Disabled Veteran"
+        msg = plate +  " must be for a Disabled Person, or Disabled Veteran"
 
     elif bool(re.fullmatch(r"^\d{5}[a-zA-Z]\d$", plate)):
-        msg = plate + "must be for a commercial vehical"
+        msg = plate + " must be for a commercial vehical"
     # user normalized + decoded to catch any bad items in the plate
     elif any(item in plate.upper() for item in band_list):
         bad_item = next(item for item in band_list if item in plate.upper())
-        msg = plate + "contains the restricted letter combination", bad_item
+        msg = plate + " contains the restricted letter combination ", bad_item
     return msg
 
 def evaluate_plate(plate: str, list_words: list[str]) -> dict:
@@ -74,9 +74,9 @@ def evaluate_plate(plate: str, list_words: list[str]) -> dict:
         # print("Fuzzy matching: ", fuzz_res)
     if fuzz_res is not None:
         print("Fuzzy matching score: ", fuzz_res[0][1])
-        print(plate, " contains the word ", fuzz_res[0][0])
+        print(plate, " may contain the word ", fuzz_res[0][0])
         print()
-        msg = (plate + " contains the word " +
+        msg = (plate + " may contain the word " +
                fuzz_res[0][0] + " (score: " +
                str(fuzz_res[0][1]) + ")")
         return msg
