@@ -1,9 +1,3 @@
----
-editor_options: 
-  markdown: 
-    wrap: 72
----
-
 # License Plates and Vulgarity: A Tool
 
 ## By Naomi Liftman, Eva Reutercrona, Oviya Muralidharan
