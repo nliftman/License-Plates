@@ -36,27 +36,27 @@ def validation_rules(plate):
     """Initial checks for license plate basics"""
     # fir go through her checks
     msg = None
-    if len(plate) > 7 or len(plate) < 2:
-        msg = plate + " is an invalid length"
+    if len(plate) > 7 or (len(plate) < 2 and len(plate) > 0):
+        msg = f"{plate} is an invalid length"
 
     elif not plate.isalnum() and len(plate)>0:
-        msg = plate + " has invalid characters"
+        msg = f"{plate} has invalid characters"
 
     elif sum(c.isdigit() for c in plate) == 4 and sum(c.isalpha() for c in plate) == 2:
-        msg = plate + " must be for Purple Heart Vessels, Disabled Person, or Disabled Veteran"
+        msg = f"{plate} must be for Purple Heart Vessels, Disabled Person, or Disabled Veteran"
 
     elif sum(c.isdigit() for c in plate) == 5 and sum(c.isalpha() for c in plate) == 1:
-        msg = plate + " must be for a commercial vehical"
+        msg = f"{plate} must be for a commercial vehical"
 
     elif sum(c.isdigit() for c in plate) == 5 and sum(c.isalpha() for c in plate) == 2:
-        msg = plate +  " must be for a Disabled Person, or Disabled Veteran"
+        msg = f"{plate} must be for a Disabled Person, or Disabled Veteran"
 
     elif bool(re.fullmatch(r"^\d{5}[a-zA-Z]\d$", plate)):
-        msg = plate + " must be for a commercial vehical"
+        msg = f"{plate} must be for a commercial vehical"
     # user normalized + decoded to catch any bad items in the plate
     elif any(item in plate.upper() for item in band_list):
         bad_item = next(item for item in band_list if item in plate.upper())
-        msg = plate + " contains the restricted letter combination ", bad_item
+        msg = f"{plate} contains the restricted letter combination {bad_item}"
     return msg
 
 def evaluate_plate(plate: str, list_words: list[str]) -> dict:
@@ -126,21 +126,22 @@ words_list = df['nospace'].tolist() # bad words list
 
 # Single License Plate
 with tab1:
-    user_lic = st.text_input("Please write your desired license plate:")
-    mesg = validation_rules(user_lic)
+     user_lic = st.text_input("Please write your desired license plate:")
+     mesg = validation_rules(user_lic)
 
-    if mesg is not None:
-        st.write(mesg)
-    else:
-        matches = evaluate_plate(user_lic, words_list)
-        st.write(matches)
-        EVIL = check_evil(user_lic)
-        if EVIL == "This plate contains a restricted word":
-            st.write(EVIL)
-     #add a button for more information but only when it is restricted
-            clicked = st.button("See More Information")
-            if clicked:
-                st.write(button_output(user_lic))
+     if user_lic:
+          if mesg is not None:
+               st.write(mesg)
+          else:
+               matches = evaluate_plate(user_lic, words_list)
+               st.write(matches)
+               EVIL = check_evil(user_lic)
+               if EVIL == "This plate contains a restricted word":
+                    st.write(EVIL)
+               #add a button for more information but only when it is restricted
+                    clicked = st.button("See More Information")
+                    if clicked:
+                         st.write(button_output(user_lic))
 
 # Batch License Plates
 with tab2:
