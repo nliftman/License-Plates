@@ -285,3 +285,6 @@ class TestWeb():
             assert "approved?" in df.columns
             assert "reason" in df.columns
             assert "notes" in df.columns
+
+if __name__ == '__main__':
+    unittest.main()
