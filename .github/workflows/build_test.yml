@@ -18,10 +18,10 @@ jobs:
       run:
         shell: bash -el {0}
 
-    # We specify all versions of Python that we want to validate.
     # GitHub will run the tests for each of these Python versions.
     strategy:
       matrix:
+      # We are working in 3.10.19
         python-version: ["3.10"]
 
     # The actual workflow steps!
@@ -34,6 +34,7 @@ jobs:
       - name: Set up conda
         uses: conda-incubator/setup-miniconda@v2
         with:
+        # Our environment name is my-env
           activate-environment: my-env
           environment-file: environment.yml
           auto-update-conda: true
@@ -44,7 +45,7 @@ jobs:
           conda install --yes coverage
       - name: Unit tests
         run: |
-          cd tests
+          cd License-Plates
           coverage run -m unittest discover
           coverage report
           coverage lcov
