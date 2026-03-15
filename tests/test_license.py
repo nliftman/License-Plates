@@ -1,9 +1,17 @@
 """test_license.py contains unit tests for the functions in website as well as tests for streamlit."""
 import unittest
 import numpy as np
+import pandas as pd
+from pathlib import Path
 
 from streamlit.testing.v1 import AppTest
-#from website import check_evil
+from website import validation_rules, evaluate_plate, button_output
+
+plates_root = Path(__file__).resolve().parent.parent # -> License-Plates/
+data_path = plates_root / "datacleaning" / "master_counts_scores.csv"
+
+df_scores = pd.read_csv(data_path)
+evil_list = df_scores['nospace'].tolist()
 
 class TestUnit(unittest.TestCase):
     """A custom exception class for testing website.py's Exceptions.
@@ -23,6 +31,47 @@ class TestUnit(unittest.TestCase):
     #     """
     #     plate = "beaner"
     #     self.assertEqual("This plate contains a restricted word", check_evil(plate))
+
+    def test_validation_rules1(self):
+        """
+         Verifies the validation_rules method is working correctly.
+        """
+        result = validation_rules("Class")
+
+        self.assertIsInstance(result, str)
+
+    def test_validation_rules2(self):
+        """
+         Verifies the validation_rules method is working correctly.
+        """
+        result = validation_rules("Fluffy5")
+
+        self.assertIsNone(result)
+
+    def test_evaluate_plate1(self):
+        """
+         Verifies the evaluate_plate method is working correctly.
+        """
+        result = evaluate_plate("head", evil_list)
+
+        self.assertIsInstance(result, tuple)
+
+        
+    def test_evaluate_plate2(self):
+        """
+         Verifies the evaluate_plate method is working correctly.
+        """
+        result = evaluate_plate("Fluffy5", evil_list)
+
+        self.assertIsNone(result)
+        
+    def test_button_output(self):
+         """
+         Verifies the buttom_output method is working correctly.
+        """
+         result = button_output("Fluffy5")
+         
+         self.assertIsInstance(result, str)
 
 class TestWeb():
     """A custom exception class for testing website.py function.
