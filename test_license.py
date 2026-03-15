@@ -1,24 +1,25 @@
-"""test_license.py contains unit tests for the functions in website as well as tests for streamlit."""
+"""test_license.py contains unit tests for the functions in website 
+as well as tests for streamlit."""
 import unittest
-import numpy as np
-import pandas as pd
 from pathlib import Path
 import io
 from unittest.mock import patch
+from pandas import read_csv
 
-from streamlit.testing.v1 import AppTest
+from st.testing.v1 import AppTest
 from website import validation_rules, evaluate_plate, button_output
 
-plates_root = Path(__file__).resolve().parent.parent # -> License-Plates/
+plates_root = Path(__file__).resolve().parent.parent  # -> License-Plates/
 data_path = plates_root / "datacleaning" / "master_counts_scores.csv"
 
-df_scores = pd.read_csv(data_path)
+df_scores = read_csv(data_path)
 evil_list = df_scores['nospace'].tolist()
+
 
 class TestUnit(unittest.TestCase):
     """A custom exception class for testing website.py's Exceptions.
-
-    Ensures website.py processes correctly with edge cases and error conditions maybe we will use this to test the fuzzy look up and scores
+    Ensures website.py processes correctly with edge cases and error
+    conditions maybe we will use this to test the fuzzy look up and scores
     """
     # def test_evilcheck1(self):
     #     """
@@ -39,7 +40,6 @@ class TestUnit(unittest.TestCase):
          Verifies the validation_rules method is working correctly.
         """
         result = validation_rules("Class")
-
         self.assertIsInstance(result, str)
 
     def test_validation_rules2(self):
@@ -47,7 +47,6 @@ class TestUnit(unittest.TestCase):
          Verifies the validation_rules method is working correctly.
         """
         result = validation_rules("Fluffy5")
-
         self.assertIsNone(result)
 
     def test_evaluate_plate1(self):
@@ -55,43 +54,38 @@ class TestUnit(unittest.TestCase):
          Verifies the evaluate_plate method is working correctly.
         """
         result = evaluate_plate("head", evil_list)
-
         self.assertIsInstance(result, tuple)
 
-        
     def test_evaluate_plate2(self):
         """
          Verifies the evaluate_plate method is working correctly.
         """
         result = evaluate_plate("Fluffy5", evil_list)
-
         self.assertIsNone(result)
-        
+
     def test_button_output(self):
-         """
-         Verifies the buttom_output method is working correctly.
         """
-         result = button_output("Fluffy5")
-         
-         self.assertIsInstance(result, str)
+        Verifies the buttom_output method is working correctly.
+        """
+        result = button_output("Fluffy5")
+        self.assertIsInstance(result, str)
+
 
 class TestWeb():
-    """A custom exception class for testing website.py function.
-
-    Ensures website.py processes correctly and displays fuzzy look up and scores
+    """A custom exception class for testing website.py function. 
+    Ensures website.py processes correctly and displays fuzzy look 
+    up and scores
     """
+
     def test_app_interact1(self):
         """
         Verifies the validation_rules elifs.
         """
         at = AppTest.from_file("website.py")
         at.run()
-
         # Check if app runs
         assert not at.exception
-
         at.text_input[0].set_value("ASSMAN").run()
-
         assert at.text_input[0].value == "ASSMAN"
         print(at.markdown[0].value)
         assert at.markdown[0].value == "ASSMAN contains the restricted letter combination ASS"
@@ -142,7 +136,8 @@ class TestWeb():
 
         assert at.text_input[0].value == "aa2345"
 
-        assert at.markdown[0].value == "aa2345 must be for Purple Heart Vessels, Disabled Person, or Disabled Veteran"
+        assert (at.markdown[0].value == "aa2345 must be for Purple Heart Vessels"
+                ", Disabled Person, or Disabled Veteran")
 
     def test_app_interact5(self):
         """
@@ -206,7 +201,8 @@ class TestWeb():
 
         assert at.text_input[0].value == "Girly45"
 
-        assert at.markdown[0].value == "This plate closely resembles a word or phrase that may be considered inappropriate."
+        assert (at.markdown[0].value == "This plate closely resembles a word "
+                "or phrase that may be considered inappropriate.")
         at.button[0].click().run()
         expected = """
         **Detected similarity**
@@ -216,8 +212,8 @@ class TestWeb():
         - Detection method: similarity matching
         """
 
-        assert " ".join(at.markdown[1].value.split()) == " ".join(expected.split())
-
+        assert " ".join(at.markdown[1].value.split()
+                        ) == " ".join(expected.split())
 
     def test_app_interact9(self):
         """
@@ -233,7 +229,7 @@ class TestWeb():
 
         assert at.text_input[0].value == "poop"
         assert at.markdown[0].value == "This plate contains a restricted word."
-        
+
         at.button[0].click().run()
 
         expected = """
@@ -243,8 +239,9 @@ class TestWeb():
         - Detection method: exact match
         """
 
-        assert " ".join(at.markdown[1].value.split()) == " ".join(expected.split())
-        
+        assert " ".join(at.markdown[1].value.split()
+                        ) == " ".join(expected.split())
+
         expected2 = """Your plate contains a word that appeared in
         [92] tweets marked as hatefull or offensive.
         This word appeared in tweets which [32] people marked as
@@ -252,7 +249,8 @@ class TestWeb():
         If all of these are zero, then it appeared in no tweets but was
         still captured by our hatefull algorithm."""
 
-        assert " ".join(at.markdown[2].value.split()) == " ".join(expected2.split())
+        assert " ".join(at.markdown[2].value.split()
+                        ) == " ".join(expected2.split())
 
     def test_app_interact10(self):
         """
@@ -263,12 +261,12 @@ class TestWeb():
 
         assert not at.exception
         assert at.tabs[1].label == "Batch CSV"
-    
+
     def test_app_interact11(self):
         """
         Verifies the csv tab works correctly when a csv is loaded.
         """
-         
+
         input_csv = io.StringIO("plate\nABC123\nBITCH1\n")
 
         with patch("streamlit.file_uploader", return_value=input_csv):
@@ -278,7 +276,6 @@ class TestWeb():
 
             assert not at.exception
 
-      
             assert len(at.dataframe) > 0
 
             df = at.dataframe[0].value
@@ -288,4 +285,3 @@ class TestWeb():
             assert "approved?" in df.columns
             assert "reason" in df.columns
             assert "notes" in df.columns
-            
