@@ -1,1 +1,76 @@
+name: build_test
 
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    # Configuring this means that your PRs will get a GitHub comment
+    # from Coveralls with your coverage.
+    branches:
+      - main
+
+# A list of jobs to run as part of the workflow
+jobs:
+  build_test:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash -el {0}
+
+    # We specify all versions of Python that we want to validate.
+    # GitHub will run the tests for each of these Python versions.
+    strategy:
+      matrix:
+        python-version: ["3.10"]
+
+    # The actual workflow steps!
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Set up conda
+        uses: conda-incubator/setup-miniconda@v2
+        with:
+          activate-environment: my-env
+          environment-file: environment.yml
+          auto-update-conda: true
+          python-version: ${{ matrix.python-version }}
+          auto-activate-base: false
+      - name: Install additional development dependencies
+        run: |
+          conda install --yes coverage
+      - name: Unit tests
+        run: |
+          cd tests
+          coverage run -m unittest discover
+          coverage report
+          coverage lcov
+      - name: Lint with Pylint
+        run: |
+           pylint License-Plates/**/*.py
+
+      # Lastly: report code coverage to Coveralls.
+      - name: Report code coverage to Coveralls
+        uses: coverallsapp/github-action@v2
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          base-path: entropy
+          path-to-lcov: entropy/coverage.lcov
+          flag-name: run-${{ join(matrix.*, ' - ') }}
+          parallel: true
+
+  finish:
+    # This job requires that build_test be finished before it
+    # can run.
+    needs: build_test
+    if: ${{ always() }}
+    runs-on: ubuntu-latest
+    steps:
+    - name: Coveralls Finished
+      uses: coverallsapp/github-action@v2
+      with:
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+        parallel-finished: true
