@@ -3,6 +3,8 @@ import unittest
 import numpy as np
 import pandas as pd
 from pathlib import Path
+import io
+from unittest.mock import patch
 
 from streamlit.testing.v1 import AppTest
 from website import validation_rules, evaluate_plate, button_output
@@ -79,6 +81,9 @@ class TestWeb():
     Ensures website.py processes correctly and displays fuzzy look up and scores
     """
     def test_app_interact1(self):
+        """
+        Verifies the validation_rules elifs.
+        """
         at = AppTest.from_file("website.py")
         at.run()
 
@@ -92,6 +97,9 @@ class TestWeb():
         assert at.markdown[0].value == "ASSMAN contains the restricted letter combination ASS"
 
     def test_app_interact2(self):
+        """
+        Verifies the validation_rules elifs.
+        """
         at = AppTest.from_file("website.py")
         at.run()
 
@@ -105,6 +113,9 @@ class TestWeb():
         assert at.markdown[0].value == "A is an invalid length"
 
     def test_app_interact3(self):
+        """
+        Verifies the validation_rules elifs.
+        """
         at = AppTest.from_file("website.py")
         at.run()
 
@@ -118,6 +129,9 @@ class TestWeb():
         assert at.markdown[0].value == "A#$&me has invalid characters"
 
     def test_app_interact4(self):
+        """
+        Verifies the validation_rules elifs.
+        """
         at = AppTest.from_file("website.py")
         at.run()
 
@@ -131,6 +145,9 @@ class TestWeb():
         assert at.markdown[0].value == "aa2345 must be for Purple Heart Vessels, Disabled Person, or Disabled Veteran"
 
     def test_app_interact5(self):
+        """
+        Verifies the validation_rules elifs.
+        """
         at = AppTest.from_file("website.py")
         at.run()
 
@@ -144,6 +161,9 @@ class TestWeb():
         assert at.markdown[0].value == "12345t must be for a commercial vehical"
 
     def test_app_interact6(self):
+        """
+        Verifies the validation_rules elifs.
+        """
         at = AppTest.from_file("website.py")
         at.run()
 
@@ -157,6 +177,9 @@ class TestWeb():
         assert at.markdown[0].value == "12345tb must be for a Disabled Person, or Disabled Veteran"
 
     def test_app_interact7(self):
+        """
+        Verifies the validation_rules elifs.
+        """
         at = AppTest.from_file("website.py")
         at.run()
 
@@ -230,3 +253,39 @@ class TestWeb():
         still captured by our hatefull algorithm."""
 
         assert " ".join(at.markdown[2].value.split()) == " ".join(expected2.split())
+
+    def test_app_interact10(self):
+        """
+        Verifies the csv tab works.
+        """
+        at = AppTest.from_file("website.py")
+        at.run()
+
+        assert not at.exception
+        assert at.tabs[1].label == "Batch CSV"
+    
+    def test_app_interact11(self):
+        """
+        Verifies the csv tab works correctly when a csv is loaded.
+        """
+         
+        input_csv = io.StringIO("plate\nABC123\nBITCH1\n")
+
+        with patch("streamlit.file_uploader", return_value=input_csv):
+
+            at = AppTest.from_file("website.py")
+            at.run()
+
+            assert not at.exception
+
+      
+            assert len(at.dataframe) > 0
+
+            df = at.dataframe[0].value
+            assert len(df) == 2
+
+            assert "plate" in df.columns
+            assert "approved?" in df.columns
+            assert "reason" in df.columns
+            assert "notes" in df.columns
+            
