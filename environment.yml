@@ -78,7 +78,6 @@ dependencies:
   - libgrpc=1.78.0
   - libiconv=1.18
   - libidn2=2.3.8
-  - libintl=0.25.1
   - libkrb5=1.22.1
   - libnghttp2=1.67.1
   - libopenblas=0.3.31
