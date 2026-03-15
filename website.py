@@ -196,18 +196,12 @@ with tab2:
                               match_type = matches[0]
                               if match_type == "substring match":
                                    reason = "This plate contains a restricted word."
-                                   exact_msg = f"""
-                                   - Detected word: {matches[1]}
-                                   - Detection method: exact match
-                                   """
+                                   exact_msg = f"""The detected word is {matches[1]}. The detection method is exact match."""
                                    
                               else:
                                    reason = "This plate closely resembles a word or phrase that may be considered inappropriate."
-                                   exact_msg = f"""
-                                   - Possible match: {matches[1]}
-                                   - Similarity score: {matches[2]}%
-                                   - Detection method: similarity matching
-                                   """
+                                   exact_msg = f"Plate closely resembles the restricted word '{matches[1]}' (similarity score: {matches[2]}%)."
+                                   
                               tweet_info = button_output(matches[1])
                               
                               note = exact_msg + "\n" + tweet_info
