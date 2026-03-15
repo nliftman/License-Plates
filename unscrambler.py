@@ -5,7 +5,6 @@ from pathlib import Path
 # 1. normalize
 from rapidfuzz import process as p1, fuzz as f1
 
-import re
 # Pandas DataFrames as table elements
 import pandas as pd
 
@@ -44,17 +43,17 @@ def char_replace(plate):
     return no_space, tokens  # return nonsplit + split tokens
 
 # 3. Look for exact substring matches in master list
-def substr_exact_match(plate, words_list):
+def substr_exact_match(plate, word_list):
     """ substring matching """
-    found = any(substring in plate.lower() for substring in words_list)
+    found = any(substring in plate.lower() for substring in word_list)
     if found:
-        res = [word for word in words_list if word in plate.lower()]
+        res = [word for word in word_list if word in plate.lower()]
         return res[0]
     #print("found: ", found)
     return found
 
 # 4. Fuzzy match for similar words if exact match not found
-def rapid_fuzzymatching(plate, words_list):
+def rapid_fuzzymatching(plate, word_list):
     """Fuzzy matching similar words"""
     # 1. to lower case + split by space?
     # 2. split up phrases to words? or can it auto find words?
@@ -65,7 +64,7 @@ def rapid_fuzzymatching(plate, words_list):
     threshold = 80
     # if plate has no space:
     if len(tokens) > 1:
-        full_extract = p1.extract(nospace, words_list, scorer=f1.WRatio, limit=1)
+        full_extract = p1.extract(nospace, word_list, scorer=f1.WRatio, limit=1)
         # threshold set for minimum score for match (can change this)
         if full_extract[0][1] >= threshold:
             print(full_extract, " is a match for ", nospace)
@@ -74,10 +73,10 @@ def rapid_fuzzymatching(plate, words_list):
     # if plate has space, go through tokens
     else:
         for token in tokens:
-            tok1 = p1.extract(token.lower(), words_list, scorer=f1.WRatio, limit=1)
+            tok1 = p1.extract(token.lower(), word_list, scorer=f1.WRatio, limit=1)
             if tok1[0][1] > threshold:
                 return tok1
-            tok2 = p1.extract(token.lower(), words_list, scorer=f1.WRatio, limit=1)
+            tok2 = p1.extract(token.lower(), word_list, scorer=f1.WRatio, limit=1)
             if  tok2[0][1] > threshold:
                 return tok2
     # split plate into 2 tokens to check if meets fuzzymatching score for similarity
@@ -86,12 +85,12 @@ def rapid_fuzzymatching(plate, words_list):
         right = nospace[i:]
         # only fuzzymatch if left/right is at least of length 3 to avoid garbage
         if len(left) >= 4:
-            left_extract = p1.extract(left, words_list, scorer=f1.WRatio, limit=1)
+            left_extract = p1.extract(left, word_list, scorer=f1.WRatio, limit=1)
             if left_extract[0][1] > threshold:
                 print(left_extract, " is a match for ", left)
                 return left_extract
         if len(right) >= 4:
-            right_extract = p1.extract(right, words_list, scorer=f1.WRatio, limit=1)
+            right_extract = p1.extract(right, word_list, scorer=f1.WRatio, limit=1)
             if right_extract[0][1] > threshold:
                 print(right_extract, " is a match for ", right)
                 return right_extract
