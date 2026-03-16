@@ -1,3 +1,5 @@
+[![Coverage Status](https://coveralls.io/repos/github/nliftman/License-Plates/badge.svg)](https://coveralls.io/github/nliftman/License-Plates)
+
 # License Plates and Vulgarity: A Tool
 
 ## By Naomi Liftman, Eva Reutercrona, Oviya Muralidharan
