@@ -6,8 +6,8 @@ import io
 from unittest.mock import patch
 from pandas import read_csv
 
-from st.testing.v1 import AppTest
-from website import validation_rules, evaluate_plate, button_output
+from streamlit.testing.v1 import AppTest
+from .website import validation_rules, evaluate_plate, button_output
 
 plates_root = Path(__file__).resolve().parent.parent  # -> License-Plates/
 data_path = plates_root / "datacleaning" / "master_counts_scores.csv"
@@ -285,3 +285,6 @@ class TestWeb():
             assert "approved?" in df.columns
             assert "reason" in df.columns
             assert "notes" in df.columns
+
+if __name__ == '__main__':
+    unittest.main()
