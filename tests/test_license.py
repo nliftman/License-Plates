@@ -1,3 +1,10 @@
+# pylint: disable=E1101
+# pylint: disable=E0401
+# these are disabled bc pylint is confused!
+#pylint cannot figure out how to import and pylint
+#thinks that we are using panda's set_value()
+#which is depricated but we are using streamlit and it donest get it
+
 """test_license.py contains unit tests for the functions in website 
 as well as tests for streamlit."""
 import unittest
