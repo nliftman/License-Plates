@@ -76,7 +76,7 @@ class TestUnit(unittest.TestCase):
         """
         plate = "poop"
         self.assertEqual("""Your plate contains a word that appeared in
-        [16] tweets marked as hatefull or offensive.
+        [6] tweets marked as hatefull or offensive.
         This word appeared in tweets which [3] people marked as
         hatefull and [13] marked as offensive.
         If all of these are zero, then it appeared in no tweets but was
