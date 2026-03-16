@@ -34,10 +34,9 @@ cleaned_df = cleaned_df[~cleaned_df.spaces.str.contains("'")]
 cleaned_df = cleaned_df[~cleaned_df.spaces.str.contains(".", regex = False)]
 
 #load the big dataset
-off = pd.read_csv('labeled_data.csv')
-off.head()
+tweets = pd.read_csv('labeled_data.csv')
 #remove class of 2
-filt = off[off['class'] < 2]
+filt = tweets[tweets['class'] < 2]
 #create hate speech and offensive language scores
 filt['hate_score'] = filt['hate_speech']/filt['count']
 filt['off_score'] = filt['offensive_language']/filt['count']
@@ -46,6 +45,21 @@ filt['off_score'] = filt['offensive_language']/filt['count']
 off_words = list(cleaned_df['nospace'])
 #create df of offensive words
 off = pd.DataFrame(cleaned_df['nospace'])
+#adding some of the hitler and conjunctions
+off.loc[1629] = ["88"]
+off.loc[1630] = ["fk"]
+off.loc[1631] = ["fkr"]
+off.loc[1632] = ["fker"]
+off.loc[1633] = ["1488"]
+off.loc[1634] = ["14"]
+off.loc[1635] = ["GTFO"]
+off.loc[1636] = ["H8"]
+off.loc[1637] = ["DGAF"]
+off.loc[1638] = ["LMAO"]
+off.loc[1639] = ["LMFAO"]
+# Concatenate and assign the result to the original DataFrame variable
+#off = pd.concat([off, new_rows_data], ignore_index=True)
+#pull just the tweets
 tweets = list(filt['tweet'])
 #create the new coluns that we will iterate over
 off['hate_speech'] = 1
@@ -74,3 +88,6 @@ off['count_perc'] = off['count_words']/11151
 #get log
 off['log_count'] = np.log(off['count_perc'])
 off['pos_log'] = off['log_count'].abs()
+
+#export df
+off.to_csv('master_counts_scores.csv')
