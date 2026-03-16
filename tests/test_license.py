@@ -302,9 +302,7 @@ class TestWeb():
             at.run()
 
             assert at is not None
-
             #assert len(at.dataframe) > 0
-            
             df = at.dataframe[0].value
             assert len(df) == 2
 
