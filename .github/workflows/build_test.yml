@@ -44,7 +44,7 @@ jobs:
           conda install --yes coverage
       - name: Unit tests
         run: |
-          coverage run -m unittest discover
+          coverage run -m unittest discover -s tests
           coverage report
           coverage lcov
       - name: Lint with Pylint
