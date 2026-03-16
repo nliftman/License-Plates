@@ -310,3 +310,11 @@ class TestWeb():
             assert "approved?" in df.columns
             assert "reason" in df.columns
             assert "notes" in df.columns
+
+    def test_response1(self):
+        """Verifies the valid length"""
+        at = AppTest.from_file("license_plates/website.py")
+        at.run()
+        at.text_input[0].set_value("A").run()
+        assert at.text_input[0].value == "A"
+        assert at.markdown[0].value == "A is an invalid length"
