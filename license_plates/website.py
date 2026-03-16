@@ -86,12 +86,13 @@ def evaluate_plate(plate: str, list_words: list[str]) -> dict:
 # getting the files for the checking evil
 
 def load_score_data():
-     plates_root = Path(__file__).resolve().parents[1]  # -> License-Plates/
-     data_path = plates_root / "datacleaning" / "master_counts_scores.csv"
+    """Load the word score dataset used for fuzzy matching."""
+    plates_root = Path(__file__).resolve().parents[1]  # -> License-Plates/
+    data_path = plates_root / "datacleaning" / "master_counts_scores.csv"
 
-     df_scores = pd.read_csv(data_path)
-     evil_list = df_scores['nospace'].tolist()  # bad words list
-     return evil_list, df_scores
+    df_scores = pd.read_csv(data_path)
+    evil_list = df_scores['nospace'].tolist()  # bad words list
+    return evil_list, df_scores
 
 # def check_evil(plate):
 #     """Initial check"""

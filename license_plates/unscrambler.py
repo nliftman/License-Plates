@@ -1,12 +1,12 @@
 """Creates multiple functions to assist in unscrambling
 license plates."""
-from pathlib import Path
+# from pathlib import Path
 
 # 1. normalize
 from rapidfuzz import process as p1, fuzz as f1
 
 # Pandas DataFrames as table elements
-import pandas as pd
+# import pandas as pd
 
 # PLATES_ROOT = Path(__file__).resolve().parent  # -> License-Plates/
 
