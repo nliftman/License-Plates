@@ -5,8 +5,8 @@ from pathlib import Path
 
 import streamlit as st
 import pandas as pd
-from unscrambler import normalize, char_replace
-from unscrambler import substr_exact_match, rapid_fuzzymatching
+from .unscrambler import normalize, char_replace
+from .unscrambler import substr_exact_match, rapid_fuzzymatching
 
 # make sure there is no button when you start
 if 'show_button' not in st.session_state:
