@@ -86,7 +86,7 @@ def evaluate_plate(plate: str, list_words: list[str]) -> dict:
 # getting the files for the checking evil
 
 def load_score_data():
-     plates_root = Path(__file__).resolve().parent  # -> License-Plates/
+     plates_root = Path(__file__).resolve().parents[1]  # -> License-Plates/
      data_path = plates_root / "datacleaning" / "master_counts_scores.csv"
 
      df_scores = pd.read_csv(data_path)

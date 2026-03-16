@@ -8,19 +8,19 @@ from rapidfuzz import process as p1, fuzz as f1
 # Pandas DataFrames as table elements
 import pandas as pd
 
-PLATES_ROOT = Path(__file__).resolve().parent  # -> License-Plates/
+# PLATES_ROOT = Path(__file__).resolve().parent  # -> License-Plates/
 
-print(PLATES_ROOT)
-# DATA_PATH = PLATES_ROOT / "data" / "uniqueevilmasterdoc.csV"
-DATA_PATH = PLATES_ROOT / "datacleaning" / "cleaned_evilwords.csv"
+# print(PLATES_ROOT)
+# # DATA_PATH = PLATES_ROOT / "data" / "uniqueevilmasterdoc.csV"
+# DATA_PATH = PLATES_ROOT / "datacleaning" / "cleaned_evilwords.csv"
 
-DATA_PATH2 = PLATES_ROOT / "data" / "applications.csv"
+# DATA_PATH2 = PLATES_ROOT / "data" / "applications.csv"
 
-df = pd.read_csv(DATA_PATH)
-words_list = df['nospace'].tolist() # bad words list
-df2 = pd.read_csv(DATA_PATH2)
-plates_list = df2['plate'].tolist() # plates list
-decisions_list = df2['status'].tolist()
+# df = pd.read_csv(DATA_PATH)
+# words_list = df['nospace'].tolist() # bad words list
+# df2 = pd.read_csv(DATA_PATH2)
+# plates_list = df2['plate'].tolist() # plates list
+# decisions_list = df2['status'].tolist()
 
 # 1. Normalize (remove everything other than alphanumeric)
 def normalize(plate):

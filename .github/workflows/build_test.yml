@@ -44,7 +44,7 @@ jobs:
           conda install --yes coverage
       - name: Unit tests
         run: |
-          cd tests
+          cd license_plates
           coverage run -m unittest discover
           coverage report
           coverage lcov
