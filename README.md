@@ -1,3 +1,5 @@
+[![Coverage Status](https://coveralls.io/repos/github/nliftman/License-Plates/badge.svg)](https://coveralls.io/github/nliftman/License-Plates)
+
 # License Plates and Vulgarity: A Tool
 
 ## By Naomi Liftman, Eva Reutercrona, Oviya Muralidharan
@@ -32,3 +34,5 @@ Data Sources:
 
 Goal for project outcome: A tool that the state of California could use
 to identify if plates should be rejected or accepted.
+
+**Note: Coverall does not recognize streamlit tests properly, so this coverage is artificially deflated.**
