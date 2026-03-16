@@ -8,30 +8,56 @@ import numpy as np
 pd.options.mode.chained_assignment = None
 #load in csv
 df = pd.read_csv('uniqueevilmasterdoc.csv')
+#only want the no space bc gives us more options
+df = pd.DataFrame(df['nospace'])
 #start by removing . because they are rly hard to remove for some reason
 dropped = df.drop([1206, 1364, 1365])
 #remove @ and get 1593
-cleaned_df = dropped[~dropped.spaces.str.contains("@")]
+cleaned_df = dropped[~dropped.nospace.str.contains("@")]
 #remove - and get 1583
-cleaned_df = cleaned_df[~cleaned_df.spaces.str.contains("-")]
+cleaned_df = cleaned_df[~cleaned_df.nospace.str.contains("-")]
 #remove ! and get 1574
-cleaned_df = cleaned_df[~cleaned_df.spaces.str.contains("!")]
+cleaned_df = cleaned_df[~cleaned_df.nospace.str.contains("!")]
 #remove _ and get 1567
-cleaned_df = cleaned_df[~cleaned_df.spaces.str.contains("_")]
+cleaned_df = cleaned_df[~cleaned_df.nospace.str.contains("_")]
 #remove / and get 1567
-cleaned_df = cleaned_df[~cleaned_df.spaces.str.contains("/")]
+cleaned_df = cleaned_df[~cleaned_df.nospace.str.contains("/")]
 #remove & and get 1566
-cleaned_df = cleaned_df[~cleaned_df.spaces.str.contains("&")]
+cleaned_df = cleaned_df[~cleaned_df.nospace.str.contains("&")]
 #remove + and get 1558
-cleaned_df = cleaned_df[~cleaned_df.spaces.str.contains('+', regex = False)]
+cleaned_df = cleaned_df[~cleaned_df.nospace.str.contains('+', regex = False)]
 #remove * and get 1487
-cleaned_df = cleaned_df[~cleaned_df.spaces.str.contains("*", regex = False)]
+cleaned_df = cleaned_df[~cleaned_df.nospace.str.contains("*", regex = False)]
 #remove # and get 1486
-cleaned_df = cleaned_df[~cleaned_df.spaces.str.contains("#")]
+cleaned_df = cleaned_df[~cleaned_df.nospace.str.contains("#")]
 #remove ' and get 1479
-cleaned_df = cleaned_df[~cleaned_df.spaces.str.contains("'")]
+cleaned_df = cleaned_df[~cleaned_df.nospace.str.contains("'")]
 #remove . and get 1477
-cleaned_df = cleaned_df[~cleaned_df.spaces.str.contains(".", regex = False)]
+cleaned_df = cleaned_df[~cleaned_df.nospace.str.contains(".", regex = False)]
+
+#adding some evil words
+cleaned_df.loc[1629] = ["88"]
+cleaned_df.loc[1630] = ["fk"]
+cleaned_df.loc[1631] = ["fkr"]
+cleaned_df.loc[1632] = ["fker"]
+cleaned_df.loc[1633] = ["1488"]
+cleaned_df.loc[1634] = ["14"]
+cleaned_df.loc[1635] = ["GTFO"]
+cleaned_df.loc[1636] = ["H8"]
+cleaned_df.loc[1637] = ["DGAF"]
+cleaned_df.loc[1638] = ["LMAO"]
+cleaned_df.loc[1639] = ["LMFAO"]
+cleaned_df.loc[1640] = ["WTF"]
+cleaned_df.loc[1641] = ["AK"]
+cleaned_df.loc[1642] = ["AK47"]
+cleaned_df.loc[1643] = ["gun"]
+cleaned_df.loc[1644] = ["guns"]
+
+#index is off so need to redo 
+cleaned_df['row_num'] = range(0, len(cleaned_df))
+
+#set the index as row_num
+cleaned_df.set_index('row_num', inplace=True)
 
 #load the big dataset
 tweets = pd.read_csv('labeled_data.csv')
@@ -41,30 +67,18 @@ filt = tweets[tweets['class'] < 2]
 filt['hate_score'] = filt['hate_speech']/filt['count']
 filt['off_score'] = filt['offensive_language']/filt['count']
 
-#list of offensive words
-off_words = list(cleaned_df['nospace'])
 #create df of offensive words
 off = pd.DataFrame(cleaned_df['nospace'])
-#adding some of the hitler and conjunctions
-off.loc[1629] = ["88"]
-off.loc[1630] = ["fk"]
-off.loc[1631] = ["fkr"]
-off.loc[1632] = ["fker"]
-off.loc[1633] = ["1488"]
-off.loc[1634] = ["14"]
-off.loc[1635] = ["GTFO"]
-off.loc[1636] = ["H8"]
-off.loc[1637] = ["DGAF"]
-off.loc[1638] = ["LMAO"]
-off.loc[1639] = ["LMFAO"]
-# Concatenate and assign the result to the original DataFrame variable
-#off = pd.concat([off, new_rows_data], ignore_index=True)
+
 #pull just the tweets
 tweets = list(filt['tweet'])
 #create the new coluns that we will iterate over
 off['hate_speech'] = 1
 off['offensive_language'] = 1
 off['count_words'] = 1
+
+#list of offensive words
+off_words = list(off['nospace'])
 
 #this gives us the count of each offensive word
 for i, value in enumerate(off_words):
