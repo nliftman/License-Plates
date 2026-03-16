@@ -94,12 +94,6 @@ def load_score_data():
     evil_words = df_scores['nospace'].tolist()  # bad words list
     return evil_words, df_scores
 
-# def check_evil(plate):
-#     """Initial check"""
-#     if plate in evil_list:
-#         return "This plate contains a restricted word"
-#     return "This plate does not contain a restricted word"
-
 
 def button_output(plate):
     """Running the plate against our list"""
@@ -135,8 +129,8 @@ with tab1:
             st.write(mesg)
         else:
             load = load_score_data()
-            evil_list = load[0]
-            matches = evaluate_plate(user_lic, evil_list)
+            evil_list_local = load[0]
+            matches = evaluate_plate(user_lic, evil_list_local)
             button_input = user_lic
             if matches is not None:
 
@@ -204,7 +198,7 @@ with tab2:
                 # 2. check for any matches with unscrambler + evaluate function
                 else:
                     # have to fix this part later, temporary will work on this tmr
-                    matches = evaluate_plate(line, evil_list)
+                    matches = evaluate_plate(line, evil_list_local)
 
                     if matches is not None:
                         dec = 'N'
