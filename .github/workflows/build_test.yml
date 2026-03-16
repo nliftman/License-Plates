@@ -49,7 +49,7 @@ jobs:
           coverage lcov
       - name: Lint with Pylint
         run: |
-           pylint license_plates/**/*.py
+           pylint license_plates
 
       # Lastly: report code coverage to Coveralls.
       - name: Report code coverage to Coveralls
