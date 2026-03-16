@@ -91,8 +91,8 @@ def load_score_data():
     data_path = plates_root / "datacleaning" / "master_counts_scores.csv"
 
     df_scores = pd.read_csv(data_path)
-    evil_list = df_scores['nospace'].tolist()  # bad words list
-    return evil_list, df_scores
+    evil_words = df_scores['nospace'].tolist()  # bad words list
+    return evil_words, df_scores
 
 # def check_evil(plate):
 #     """Initial check"""
