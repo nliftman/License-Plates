@@ -84,11 +84,14 @@ def evaluate_plate(plate: str, list_words: list[str]) -> dict:
 
 
 # getting the files for the checking evil
-plates_root = Path(__file__).resolve().parent  # -> License-Plates/
-data_path = plates_root / "datacleaning" / "master_counts_scores.csv"
 
-df_scores = pd.read_csv(data_path)
-evil_list = df_scores['nospace'].tolist()  # bad words list
+def load_score_data():
+     plates_root = Path(__file__).resolve().parent  # -> License-Plates/
+     data_path = plates_root / "datacleaning" / "master_counts_scores.csv"
+
+     df_scores = pd.read_csv(data_path)
+     evil_list = df_scores['nospace'].tolist()  # bad words list
+     return evil_list, df_scores
 
 # def check_evil(plate):
 #     """Initial check"""
@@ -99,6 +102,7 @@ evil_list = df_scores['nospace'].tolist()  # bad words list
 
 def button_output(plate):
     """Running the plate against our list"""
+    evil_list, df_scores = load_score_data()
     if plate in evil_list:
         row = df_scores.loc[df_scores['nospace'] == plate]
         print(row)
@@ -129,6 +133,8 @@ with tab1:
         if mesg is not None:
             st.write(mesg)
         else:
+            load = load_score_data()
+            evil_list = load[0]
             matches = evaluate_plate(user_lic, evil_list)
             button_input = user_lic
             if matches is not None:
