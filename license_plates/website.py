@@ -84,21 +84,20 @@ def evaluate_plate(plate: str, list_words: list[str]) -> dict:
 
 
 # getting the files for the checking evil
-plates_root = Path(__file__).resolve().parent  # -> License-Plates/
-data_path = plates_root / "datacleaning" / "master_counts_scores.csv"
 
-df_scores = pd.read_csv(data_path)
-evil_list = df_scores['nospace'].tolist()  # bad words list
+def load_score_data():
+    """Load the word score dataset used for fuzzy matching."""
+    plates_root = Path(__file__).resolve().parents[1]  # -> License-Plates/
+    data_path = plates_root / "datacleaning" / "master_counts_scores.csv"
 
-# def check_evil(plate):
-#     """Initial check"""
-#     if plate in evil_list:
-#         return "This plate contains a restricted word"
-#     return "This plate does not contain a restricted word"
+    df_scores = pd.read_csv(data_path)
+    evil_words = df_scores['nospace'].tolist()  # bad words list
+    return evil_words, df_scores
 
 
 def button_output(plate):
     """Running the plate against our list"""
+    evil_list, df_scores = load_score_data()
     if plate in evil_list:
         row = df_scores.loc[df_scores['nospace'] == plate]
         print(row)
@@ -129,7 +128,9 @@ with tab1:
         if mesg is not None:
             st.write(mesg)
         else:
-            matches = evaluate_plate(user_lic, evil_list)
+            load = load_score_data()
+            evil_list_local = load[0]
+            matches = evaluate_plate(user_lic, evil_list_local)
             button_input = user_lic
             if matches is not None:
 
@@ -197,7 +198,7 @@ with tab2:
                 # 2. check for any matches with unscrambler + evaluate function
                 else:
                     # have to fix this part later, temporary will work on this tmr
-                    matches = evaluate_plate(line, evil_list)
+                    matches = evaluate_plate(line, evil_list_local)
 
                     if matches is not None:
                         dec = 'N'
